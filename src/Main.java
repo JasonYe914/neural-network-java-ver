@@ -41,7 +41,9 @@ public class Main {
             }
         }
 
-        //Training loop
+        int epochs = 1000;
+        double lr = 0.01;
+
         for(int i = 0; i < epochs; i++){
 
         }
@@ -155,6 +157,7 @@ public class Main {
      * Trains the AI into making a better prediction
      *
      * TODO: Make sure to pass in 0.1 for lr variable
+     * TODO: Implement a function to transpose a matrix
      * @param x
      * @param y
      * @param z1
@@ -162,18 +165,67 @@ public class Main {
      * @param a2
      * @param lr
      */
-    public static void backward(double[] x, double[] y, double[][] z1, double a1, double a2, double lr){
-        double[] dz2 = new double[y.length];
-        for(int i = 0; i < y.length; i++){
-            dz2[i] = a2 - y[i];
+    public static void backward(double[] x, double[] y, double[][] z1, double[][] a1, double[][] a2, double lr){
+        double[][] dz2 = new double[a2.length][a2[0].length];
+        double[][] dw2 = new double[W2.length][W2[0].length];
+
+        for(int i = 0; i < dz2.length; i++){
+            for(int j = 0; j < dz2[0].length; j++){
+                dz2[i][j] = a2[i][j] - y[i];
+            }
+        }
+
+        //Not sure if this works
+        ArrayList<double[]> transpose = new ArrayList<>();
+        for(int i = 0; i < a1.length; i++){
+            for(int j = 0; j < a1[0].length; j++){
+                double temp = a1[i][j];
+                a1[i][j] = a1[j][i];
+                a1[j][i] = temp;
+            }
+        }
+
+        double db2;
+        double sum = 0;
+        for(int i = 0; i < dz2.length; i++){
+            for(int j = 0; j < dz2[0].length; j++){
+                sum += dz2[i][j];
+            }
+        }
+        db2 = sum/(dz2.length*dz2[0].length);
+
+
+
+
+        for(int i = 0; i < W2.length; i++){
+            for(int j = 0; j < W2[0].length; j++){
+                W2[i][j] -= lr * dw2[i][j];
+            }
+        }
+        for(int i = 0; i < B2.length; i++){
+            for(int j = 0; j < B2[0].length; j++){
+                B2[i][j] -= lr * db2;
+            }
+        }
+        for(int i = 0; i < W1.length; i++){
+            for(int j = 0; j < W1[0].length; j++){
+                W1[i][j] -= lr * dW1[i][j];
+            }
+        }
+        for(int i = 0; i < B1.length; i++){
+            for(int j = 0; j < B1[0].length; j++){
+                B1[i][j] -= lr * db1;
+            }
         }
 
 
 
 
-
-
     }
+
+    /**
+     * TODO: Add the prediction method
+     */
 
 
 
